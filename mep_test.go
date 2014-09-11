@@ -23,7 +23,7 @@ func BenchmarkMepGetAQI(b *testing.B) {
 	}
 }
 
-func BenchmarkMepGetMepPM25IAQI(b *testing.B) {
+func BenchmarkGetMepPM25IAQI(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		GetMepPM25IAQI(130)
 	}
@@ -69,24 +69,9 @@ func TestGetMepIAQI(t *testing.T) {
 	}
 
 	for _, v := range validMEPPollutants {
-		points := mepConcentrations[v]
-		// with maxi check
-		max := points[len(points)-1]
-		iaqi, err := GetMepIAQI(v, max)
-		if err != nil {
-			t.Errorf("%s with max %f should not raise exception", v, max)
-		}
-		if v == "o3_8h" || v == "so2_1h" {
-			if iaqi != mepIAQIs[len(mepConcentrations[v])-1] {
-				t.Errorf("%s with max %f, the iaqi should be %f", v, max, mepIAQIs[len(mepConcentrations[v])-1])
-			}
-		} else {
-			if iaqi != mepIAQIs[len(mepIAQIs)-1] {
-				t.Errorf("%s with max %f, the iaqi should be %f", v, max, mepIAQIs[len(mepIAQIs)-1])
-			}
-		}
+		max := mepComputableMaxs[v]
 		overFlow := max + 1
-		iaqi, err = GetMepIAQI(v, max+1)
+		iaqi, err = GetMepIAQI(v, overFlow)
 		if v == "o3_8h" || v == "so2_1h" {
 			if err == nil {
 				t.Errorf("%s with max %f + 1(%f) should raise exception", v, max, overFlow)
@@ -103,13 +88,20 @@ func TestGetMepIAQI(t *testing.T) {
 			}
 		}
 	} // end for
-
-	iaqi, err = GetMepIAQI("pm25_24h", 42)
-	if err != nil {
-		t.Error("pm25_24h with 42 concentration should not raise exception")
+	// break points check pm25_24h as sample
+	seeds := []float64{35, 75, 115, 150, 250, 350, 500}
+	for i, seed := range seeds {
+		iaqi := int(mepIAQIs[i].To)
+		if v, _ := GetMepIAQI("pm25_24h", seed); v != iaqi {
+			t.Errorf("pm25_24h with %f concentration should equal to %d, actually %d", seed, iaqi, v)
+		}
 	}
-	if iaqi != 58.75 {
-		t.Errorf("pm25_24h with 42 concentration should return %f, but get %f", 58.75, iaqi)
+	// pm25.in sample data
+	if v, _ := GetMepIAQI("pm25_24h", 64); v != 87 {
+		t.Errorf("wanted %d, err %d", 87, v)
+	}
+	if v, _ := GetMepIAQI("pm10_24h", 115); v != 83 {
+		t.Errorf("wanted %d, err %d", 83, v)
 	}
 }
 
@@ -132,7 +124,35 @@ func TestMepPollutantGetAllIAQI(t *testing.T) {
 	}
 }
 
-func TestMepPrimaryPollutants(t *testing.T) {
+func TestMepGetAQI(t *testing.T) {
+	mep := &MepPollutant{
+		PM25Pollutant24H: 44,
+		PM10Pollutant24H: 65,
+		COPollutant24H:   1.131,
+		NO2Pollutant24H:  32,
+		O3Pollutant1H:    93,
+		O3Pollutant8H:    104,
+		SO2Pollutant24H:  9,
+	}
+
+	mep1 := &MepPollutant{
+		PM25Pollutant24H: 82,
+		PM10Pollutant24H: 113,
+		COPollutant24H:   0.948,
+		NO2Pollutant24H:  28,
+		O3Pollutant1H:    85,
+		O3Pollutant8H:    101,
+		SO2Pollutant24H:  10,
+	}
+	if v := mep.GetAQI(); v != 62 {
+		t.Errorf("should pass with %d", v)
+	}
+	if v := mep1.GetAQI(); v != 109 {
+		t.Errorf("should pass with %d", v)
+	}
+}
+
+func TestMepResponsiblePollutants(t *testing.T) {
 	mep := &MepPollutant{
 		PM25Pollutant24H: 44,
 		PM10Pollutant24H: 65,
@@ -193,33 +213,5 @@ func TestMepNonAttainmentPollutants(t *testing.T) {
 	result = mep1.NonAttainmentPollutants()
 	if len(result) != 2 {
 		t.Errorf("length of result should be 2")
-	}
-}
-
-func TestMepGetAQI(t *testing.T) {
-	mep := &MepPollutant{
-		PM25Pollutant24H: 44,
-		PM10Pollutant24H: 65,
-		COPollutant24H:   1.131,
-		NO2Pollutant24H:  32,
-		O3Pollutant1H:    93,
-		O3Pollutant8H:    104,
-		SO2Pollutant24H:  9,
-	}
-
-	mep1 := &MepPollutant{
-		PM25Pollutant24H: 82,
-		PM10Pollutant24H: 113,
-		COPollutant24H:   0.948,
-		NO2Pollutant24H:  28,
-		O3Pollutant1H:    85,
-		O3Pollutant8H:    101,
-		SO2Pollutant24H:  10,
-	}
-	if mep.GetAQI() != 61.25 {
-		t.Error("should pass")
-	}
-	if mep1.GetAQI() != 108.75 {
-		t.Error("should pass")
 	}
 }

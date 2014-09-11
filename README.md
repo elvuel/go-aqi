@@ -32,7 +32,6 @@
 
 ***
 
-* MEP Refactor
 * Helper Utils
 * Self host webservice
 * Add reference resources
