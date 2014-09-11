@@ -122,7 +122,7 @@ func (mep *MepPollutant) GetAllIAQI() map[string]float64 {
 			if !ok {
 				v = -1
 			}
-			_, iaqi := GetMepIAQI(tag, v)
+			iaqi, _ := GetMepIAQI(tag, v)
 			result[tag] = iaqi
 		}
 	}
@@ -162,30 +162,30 @@ func (mep *MepPollutant) NonAttainmentPollutants() []string {
 	return result
 }
 
-func GetMepPM25IAQI(concentration float64) (error, float64) {
+func GetMepPM25IAQI(concentration float64) (float64, error) {
 	return GetMepIAQI("pm25_24h", concentration)
 }
 
-func GetMepPM10IAQI(concentration float64) (error, float64) {
+func GetMepPM10IAQI(concentration float64) (float64, error) {
 	return GetMepIAQI("pm10_24h", concentration)
 }
 
-func GetMepIAQI(pollutant string, concentration float64) (error, float64) {
+func GetMepIAQI(pollutant string, concentration float64) (float64, error) {
 	if concentration == 0 {
-		return nil, 0
+		return 0, nil
 	}
 	if !mepPollutantCalculable(pollutant) {
-		return errors.New("Invalid pollutant metric"), -1
+		return -1, errors.New("Invalid pollutant metric")
 	} else {
 		if concentration >= mepComputableMaxs[pollutant] {
 			if concentration == mepComputableMaxs[pollutant] {
-				return nil, mepIAQIs[len(mepConcentrations[pollutant])-1]
+				return mepIAQIs[len(mepConcentrations[pollutant])-1], nil
 			} else {
 				switch pollutant {
 				case "so2_1h", "o3_8h":
-					return errors.New("Concentration value out of range"), -2
+					return -2, errors.New("Concentration value out of range")
 				default:
-					return nil, 911
+					return 911, nil
 				}
 			}
 		} else {
@@ -200,12 +200,12 @@ func GetMepIAQI(pollutant string, concentration float64) (error, float64) {
 				}
 			}
 			if (bpHigh - bpLow) == 0 {
-				return errors.New("Divided by 0???"), -3
+				return -3, errors.New("Divided by 0???")
 			}
-			return nil, ((iaqiHigh-iaqiLow)/(bpHigh-bpLow))*(concentration-bpLow) + iaqiLow
+			return ((iaqiHigh-iaqiLow)/(bpHigh-bpLow))*(concentration-bpLow) + iaqiLow, nil
 		}
 	}
-	return nil, 0
+	return 0, nil
 }
 
 func mepPollutantCalculable(pollutant string) bool {

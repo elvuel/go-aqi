@@ -44,7 +44,7 @@ func TestMepPollutantCalculable(t *testing.T) {
 
 func TestGetMepIAQI(t *testing.T) {
 
-	err, iaqi := GetMepIAQI("foo", 0)
+	iaqi, err := GetMepIAQI("foo", 0)
 	if err != nil {
 		t.Error("fake foo pollutant should not raise exception")
 	}
@@ -52,7 +52,7 @@ func TestGetMepIAQI(t *testing.T) {
 		t.Error("fake foo pollutant with 0 concentration should return 0")
 	}
 
-	err, iaqi = GetMepIAQI("pm25_24h", 0)
+	iaqi, err = GetMepIAQI("pm25_24h", 0)
 	if err != nil {
 		t.Error("pm25_24h pollutant should not raise exception")
 	}
@@ -60,7 +60,7 @@ func TestGetMepIAQI(t *testing.T) {
 	if iaqi != 0 {
 		t.Error("pm25_24h pollutant with 0 concentration should return 0")
 	}
-	err, iaqi = GetMepIAQI("foo", 42)
+	iaqi, err = GetMepIAQI("foo", 42)
 	if err == nil {
 		t.Error("fake foo pollutant should raise exception")
 	}
@@ -72,7 +72,7 @@ func TestGetMepIAQI(t *testing.T) {
 		points := mepConcentrations[v]
 		// with maxi check
 		max := points[len(points)-1]
-		err, iaqi := GetMepIAQI(v, max)
+		iaqi, err := GetMepIAQI(v, max)
 		if err != nil {
 			t.Errorf("%s with max %f should not raise exception", v, max)
 		}
@@ -86,7 +86,7 @@ func TestGetMepIAQI(t *testing.T) {
 			}
 		}
 		overFlow := max + 1
-		err, iaqi = GetMepIAQI(v, max+1)
+		iaqi, err = GetMepIAQI(v, max+1)
 		if v == "o3_8h" || v == "so2_1h" {
 			if err == nil {
 				t.Errorf("%s with max %f + 1(%f) should raise exception", v, max, overFlow)
@@ -104,7 +104,7 @@ func TestGetMepIAQI(t *testing.T) {
 		}
 	} // end for
 
-	err, iaqi = GetMepIAQI("pm25_24h", 42)
+	iaqi, err = GetMepIAQI("pm25_24h", 42)
 	if err != nil {
 		t.Error("pm25_24h with 42 concentration should not raise exception")
 	}
