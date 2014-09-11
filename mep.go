@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	MepPrimaryPullutantClassified       = 50
+	MepPrimaryPollutantClassified       = 50
 	MepNonAttainmentPollutantClassified = 100
 )
 
@@ -17,7 +17,7 @@ var (
 	mepComputableMaxs map[string]float64
 )
 
-type MepPullutant struct {
+type MepPollutant struct {
 	SO2Pollutant24H  float64 `json:"so2_24h"`
 	SO2Pollutant1H   float64 `json:"so2_1h"`
 	NO2Pollutant24H  float64 `json:"no2_24h"`
@@ -97,7 +97,7 @@ func init() {
 	}
 }
 
-func (mep *MepPullutant) GetAQI() float64 {
+func (mep *MepPollutant) GetAQI() float64 {
 	var result float64
 	result = -1
 	allIAQI := mep.GetAllIAQI()
@@ -109,7 +109,7 @@ func (mep *MepPullutant) GetAQI() float64 {
 	return result
 }
 
-func (mep *MepPullutant) GetAllIAQI() map[string]float64 {
+func (mep *MepPollutant) GetAllIAQI() map[string]float64 {
 	var result map[string]float64
 	result = make(map[string]float64)
 	val := reflect.ValueOf(mep).Elem()
@@ -117,7 +117,7 @@ func (mep *MepPullutant) GetAllIAQI() map[string]float64 {
 	for i := 0; i < val.NumField(); i++ {
 		typeField := val.Type().Field(i)
 		valueField := val.Field(i)
-		if tag := typeField.Tag.Get("json"); mepPullutantCalculable(tag) {
+		if tag := typeField.Tag.Get("json"); mepPollutantCalculable(tag) {
 			v, ok := valueField.Interface().(float64)
 			if !ok {
 				v = -1
@@ -129,7 +129,7 @@ func (mep *MepPullutant) GetAllIAQI() map[string]float64 {
 	return result
 }
 
-func (mep *MepPullutant) PrimaryPullutants() []string {
+func (mep *MepPollutant) PrimaryPollutants() []string {
 	var result []string
 	var max float64
 	max = 0
@@ -140,7 +140,7 @@ func (mep *MepPullutant) PrimaryPullutants() []string {
 			max = v
 		}
 	}
-	if max > MepPrimaryPullutantClassified {
+	if max > MepPrimaryPollutantClassified {
 		for k, v := range allIAQI {
 			if v == max {
 				result = append(result, k)
@@ -150,7 +150,7 @@ func (mep *MepPullutant) PrimaryPullutants() []string {
 	return result
 }
 
-func (mep *MepPullutant) NonAttainmentPollutants() []string {
+func (mep *MepPollutant) NonAttainmentPollutants() []string {
 	var result []string
 	result = make([]string, 0)
 	allIAQI := mep.GetAllIAQI()
@@ -170,18 +170,18 @@ func GetMepPM10IAQI(concentration float64) (error, float64) {
 	return GetMepIAQI("pm10_24h", concentration)
 }
 
-func GetMepIAQI(pullutant string, concentration float64) (error, float64) {
+func GetMepIAQI(pollutant string, concentration float64) (error, float64) {
 	if concentration == 0 {
 		return nil, 0
 	}
-	if !mepPullutantCalculable(pullutant) {
-		return errors.New("Invalid pullutant metric"), -1
+	if !mepPollutantCalculable(pollutant) {
+		return errors.New("Invalid pollutant metric"), -1
 	} else {
-		if concentration >= mepComputableMaxs[pullutant] {
-			if concentration == mepComputableMaxs[pullutant] {
-				return nil, mepIAQIs[len(mepConcentrations[pullutant])-1]
+		if concentration >= mepComputableMaxs[pollutant] {
+			if concentration == mepComputableMaxs[pollutant] {
+				return nil, mepIAQIs[len(mepConcentrations[pollutant])-1]
 			} else {
-				switch pullutant {
+				switch pollutant {
 				case "so2_1h", "o3_8h":
 					return errors.New("Concentration value out of range"), -2
 				default:
@@ -190,9 +190,9 @@ func GetMepIAQI(pullutant string, concentration float64) (error, float64) {
 			}
 		} else {
 			var bpLow, bpHigh, iaqiLow, iaqiHigh float64
-			for i, v := range mepConcentrations[pullutant] {
+			for i, v := range mepConcentrations[pollutant] {
 				if concentration <= v {
-					bpLow = mepConcentrations[pullutant][i-1]
+					bpLow = mepConcentrations[pollutant][i-1]
 					bpHigh = v
 					iaqiLow = mepIAQIs[i-1]
 					iaqiHigh = mepIAQIs[i]
@@ -208,6 +208,6 @@ func GetMepIAQI(pullutant string, concentration float64) (error, float64) {
 	return nil, 0
 }
 
-func mepPullutantCalculable(pullutant string) bool {
-	return mepComputableMaxs[pullutant] > 0
+func mepPollutantCalculable(pollutant string) bool {
+	return mepComputableMaxs[pollutant] > 0
 }

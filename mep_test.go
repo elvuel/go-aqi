@@ -5,12 +5,12 @@ import (
 )
 
 var (
-	validPullutants = []string{"so2_24h", "so2_1h", "no2_24h", "no2_1h", "co_24h", "co_1h", "o3_1h", "o3_8h", "pm10_24h", "pm25_24h"}
+	validPollutants = []string{"so2_24h", "so2_1h", "no2_24h", "no2_1h", "co_24h", "co_1h", "o3_1h", "o3_8h", "pm10_24h", "pm25_24h"}
 )
 
 func BenchmarkMepGetAQI(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		mep := &MepPullutant{
+		mep := &MepPollutant{
 			PM25Pollutant24H: 44,
 			PM10Pollutant24H: 65,
 			COPollutant24H:   1.131,
@@ -29,14 +29,14 @@ func BenchmarkMepGetMepPM25IAQI(b *testing.B) {
 	}
 }
 
-func TestMepPullutantCalculable(t *testing.T) {
-	for _, v := range validPullutants {
-		if !mepPullutantCalculable(v) {
+func TestMepPollutantCalculable(t *testing.T) {
+	for _, v := range validPollutants {
+		if !mepPollutantCalculable(v) {
 			t.Errorf("%s should be calculable", v)
 		}
 	}
 	for _, v := range []string{"foo", "bar"} {
-		if mepPullutantCalculable(v) {
+		if mepPollutantCalculable(v) {
 			t.Errorf("%s should not be calculable", v)
 		}
 	}
@@ -46,29 +46,29 @@ func TestGetIAQI(t *testing.T) {
 
 	err, iaqi := GetMepIAQI("foo", 0)
 	if err != nil {
-		t.Error("fake foo pullutant should not raise exception")
+		t.Error("fake foo pollutant should not raise exception")
 	}
 	if iaqi != 0 {
-		t.Error("fake foo pullutant with 0 concentration should return 0")
+		t.Error("fake foo pollutant with 0 concentration should return 0")
 	}
 
 	err, iaqi = GetMepIAQI("pm25_24h", 0)
 	if err != nil {
-		t.Error("pm25_24h pullutant should not raise exception")
+		t.Error("pm25_24h pollutant should not raise exception")
 	}
 
 	if iaqi != 0 {
-		t.Error("pm25_24h pullutant with 0 concentration should return 0")
+		t.Error("pm25_24h pollutant with 0 concentration should return 0")
 	}
 	err, iaqi = GetMepIAQI("foo", 42)
 	if err == nil {
-		t.Error("fake foo pullutant should raise exception")
+		t.Error("fake foo pollutant should raise exception")
 	}
 	if iaqi != -1 {
-		t.Error("fake foo pullutant with gt 0 value should return -1")
+		t.Error("fake foo pollutant with gt 0 value should return -1")
 	}
 
-	for _, v := range validPullutants {
+	for _, v := range validPollutants {
 		points := mepConcentrations[v]
 		// with maxi check
 		max := points[len(points)-1]
@@ -113,8 +113,8 @@ func TestGetIAQI(t *testing.T) {
 	}
 }
 
-func TestMepPullutantGetAllIAQI(t *testing.T) {
-	mep := &MepPullutant{
+func TestMepPollutantGetAllIAQI(t *testing.T) {
+	mep := &MepPollutant{
 		PM25Pollutant24H: 44,
 		PM10Pollutant24H: 65,
 		COPollutant24H:   1.131,
@@ -124,16 +124,16 @@ func TestMepPullutantGetAllIAQI(t *testing.T) {
 		SO2Pollutant24H:  9,
 	}
 	result := mep.GetAllIAQI()
-	nonZeroPullutants := []string{"so2_24h", "no2_24h", "o3_8h", "pm10_24h", "pm25_24h", "co_24h", "o3_1h"}
-	for _, v := range nonZeroPullutants {
+	nonZeroPollutants := []string{"so2_24h", "no2_24h", "o3_8h", "pm10_24h", "pm25_24h", "co_24h", "o3_1h"}
+	for _, v := range nonZeroPollutants {
 		if result[v] <= 0 {
 			t.Errorf("want > 0 actually %f", result[v])
 		}
 	}
 }
 
-func TestMepPrimaryPullutants(t *testing.T) {
-	mep := &MepPullutant{
+func TestMepPrimaryPollutants(t *testing.T) {
+	mep := &MepPollutant{
 		PM25Pollutant24H: 44,
 		PM10Pollutant24H: 65,
 		COPollutant24H:   1.131,
@@ -142,14 +142,14 @@ func TestMepPrimaryPullutants(t *testing.T) {
 		O3Pollutant8H:    104,
 		SO2Pollutant24H:  9,
 	}
-	result := mep.PrimaryPullutants()
+	result := mep.PrimaryPollutants()
 	if len(result) != 1 {
 		t.Error("should be pm25_24h, length 1")
 	}
 	if result[0] != "pm25_24h" {
 		t.Error("should be pm25_24h")
 	}
-	mep1 := &MepPullutant{
+	mep1 := &MepPollutant{
 		PM25Pollutant24H: 37,
 		PM10Pollutant24H: 55,
 		COPollutant24H:   0.436,
@@ -158,35 +158,35 @@ func TestMepPrimaryPullutants(t *testing.T) {
 		O3Pollutant8H:    115,
 		SO2Pollutant24H:  14,
 	}
-	result = mep1.PrimaryPullutants()
+	result = mep1.PrimaryPollutants()
 	if len(result) != 1 {
 		t.Error("should be o3_8h, length 1")
 	}
 	if result[0] != "o3_8h" {
 		t.Error("should be o3_8h")
 	}
-	mep2 := &MepPullutant{
+	mep2 := &MepPollutant{
 		PM25Pollutant24H: 75,
 		PM10Pollutant24H: 150,
 	}
-	result = mep2.PrimaryPullutants()
+	result = mep2.PrimaryPollutants()
 	if len(result) != 2 {
 		t.Errorf("length of result should be 2")
 	}
 }
 
 func TestMepNonAttainmentPollutants(t *testing.T) {
-	mep := &MepPullutant{
+	mep := &MepPollutant{
 		PM25Pollutant24H: 115,
 	}
 	result := mep.NonAttainmentPollutants()
 	if len(result) != 1 {
-		t.Error("pm25_24h with 115 should be non attainment pullutant")
+		t.Error("pm25_24h with 115 should be non attainment pollutant")
 	}
 	if result[0] != "pm25_24h" {
-		t.Error("pm25_24h with 115 should be non attainment pullutant")
+		t.Error("pm25_24h with 115 should be non attainment pollutant")
 	}
-	mep1 := &MepPullutant{
+	mep1 := &MepPollutant{
 		PM25Pollutant24H: 115,
 		PM10Pollutant24H: 350,
 	}
@@ -197,7 +197,7 @@ func TestMepNonAttainmentPollutants(t *testing.T) {
 }
 
 func TestMepGetAQI(t *testing.T) {
-	mep := &MepPullutant{
+	mep := &MepPollutant{
 		PM25Pollutant24H: 44,
 		PM10Pollutant24H: 65,
 		COPollutant24H:   1.131,
@@ -207,7 +207,7 @@ func TestMepGetAQI(t *testing.T) {
 		SO2Pollutant24H:  9,
 	}
 
-	mep1 := &MepPullutant{
+	mep1 := &MepPollutant{
 		PM25Pollutant24H: 82,
 		PM10Pollutant24H: 113,
 		COPollutant24H:   0.948,

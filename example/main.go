@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	mep := &aqi.MepPullutant{
+	mep := &aqi.MepPollutant{
 		PM25Pollutant24H: 44,
 		PM10Pollutant24H: 65,
 		COPollutant24H:   1.131,
