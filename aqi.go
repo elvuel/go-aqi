@@ -8,7 +8,7 @@ import (
 const (
 	Author  = "elvuel"
 	Email   = "elvuel@gmail.com"
-	Version = "EPA wip..."
+	Version = "0.1-beta"
 	Licence = "MIT"
 )
 

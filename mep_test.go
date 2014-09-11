@@ -142,7 +142,7 @@ func TestMepPrimaryPollutants(t *testing.T) {
 		O3Pollutant8H:    104,
 		SO2Pollutant24H:  9,
 	}
-	result := mep.PrimaryPollutants()
+	result := mep.ResponsiblePollutants()
 	if len(result) != 1 {
 		t.Error("should be pm25_24h, length 1")
 	}
@@ -158,7 +158,7 @@ func TestMepPrimaryPollutants(t *testing.T) {
 		O3Pollutant8H:    115,
 		SO2Pollutant24H:  14,
 	}
-	result = mep1.PrimaryPollutants()
+	result = mep1.ResponsiblePollutants()
 	if len(result) != 1 {
 		t.Error("should be o3_8h, length 1")
 	}
@@ -169,7 +169,7 @@ func TestMepPrimaryPollutants(t *testing.T) {
 		PM25Pollutant24H: 75,
 		PM10Pollutant24H: 150,
 	}
-	result = mep2.PrimaryPollutants()
+	result = mep2.ResponsiblePollutants()
 	if len(result) != 2 {
 		t.Errorf("length of result should be 2")
 	}

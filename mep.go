@@ -129,7 +129,7 @@ func (mep *MepPollutant) GetAllIAQI() map[string]float64 {
 	return result
 }
 
-func (mep *MepPollutant) PrimaryPollutants() []string {
+func (mep *MepPollutant) ResponsiblePollutants() []string {
 	var result []string
 	var max float64
 	max = 0
