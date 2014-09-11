@@ -1,5 +1,7 @@
 # AQI
 
+[![wercker status](https://app.wercker.com/status/cffe1b567c592d1ee023dbe90915ab9b/m "wercker status")](https://app.wercker.com/project/bykey/cffe1b567c592d1ee023dbe90915ab9b)
+
 **MEP**
 >	* [**GB3095—2012**](http://kjs.mep.gov.cn/hjbhbz/bzwb/dqhjbh/dqhjzlbz/201203/t20120302_224165.htm)
 	
