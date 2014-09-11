@@ -19,7 +19,7 @@ func BenchmarkEpaGetAQI(b *testing.B) {
 	}
 }
 
-func BenchmarkEpaGetEpaPM25IAQI(b *testing.B) {
+func BenchmarkGetEpaPM25IAQI(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		GetEpaPM25IAQI(130)
 	}
