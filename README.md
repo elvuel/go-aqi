@@ -1,4 +1,4 @@
-# AQI
+# AQI [![Build Status](https://travis-ci.org/elvuel/go-aqi.png?branch=master)](https://travis-ci.org/elvuel/go-aqi)
 
 [![wercker status](https://app.wercker.com/status/cffe1b567c592d1ee023dbe90915ab9b/m "wercker status")](https://app.wercker.com/project/bykey/cffe1b567c592d1ee023dbe90915ab9b)
 
