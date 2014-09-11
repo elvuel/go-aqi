@@ -5,7 +5,7 @@ import (
 )
 
 var (
-	validPollutants = []string{"so2_24h", "so2_1h", "no2_24h", "no2_1h", "co_24h", "co_1h", "o3_1h", "o3_8h", "pm10_24h", "pm25_24h"}
+	validMEPPollutants = []string{"so2_24h", "so2_1h", "no2_24h", "no2_1h", "co_24h", "co_1h", "o3_1h", "o3_8h", "pm10_24h", "pm25_24h"}
 )
 
 func BenchmarkMepGetAQI(b *testing.B) {
@@ -30,7 +30,7 @@ func BenchmarkMepGetMepPM25IAQI(b *testing.B) {
 }
 
 func TestMepPollutantCalculable(t *testing.T) {
-	for _, v := range validPollutants {
+	for _, v := range validMEPPollutants {
 		if !mepPollutantCalculable(v) {
 			t.Errorf("%s should be calculable", v)
 		}
@@ -42,7 +42,7 @@ func TestMepPollutantCalculable(t *testing.T) {
 	}
 }
 
-func TestGetIAQI(t *testing.T) {
+func TestGetMepIAQI(t *testing.T) {
 
 	err, iaqi := GetMepIAQI("foo", 0)
 	if err != nil {
@@ -68,7 +68,7 @@ func TestGetIAQI(t *testing.T) {
 		t.Error("fake foo pollutant with gt 0 value should return -1")
 	}
 
-	for _, v := range validPollutants {
+	for _, v := range validMEPPollutants {
 		points := mepConcentrations[v]
 		// with maxi check
 		max := points[len(points)-1]

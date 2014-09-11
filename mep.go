@@ -22,8 +22,8 @@ type MepPollutant struct {
 	SO2Pollutant1H   float64 `json:"so2_1h"`
 	NO2Pollutant24H  float64 `json:"no2_24h"`
 	NO2Pollutant1H   float64 `json:"no2_1h"`
-	COPollutant24H   float64 `json:"co_24h"`
-	COPollutant1H    float64 `json:"co_1h"`
+	COPollutant24H   float64 `json:"co_24h"` // mg/m³ (mass concentraion)
+	COPollutant1H    float64 `json:"co_1h"`  // mg/m³ (mass concentraion)
 	O3Pollutant1H    float64 `json:"o3_1h"`
 	O3Pollutant8H    float64 `json:"o3_8h"`
 	PM10Pollutant24H float64 `json:"pm10_24h"`
