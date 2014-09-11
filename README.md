@@ -1,27 +1,44 @@
 # AQI
-	Currently only MEP. The EPA --- wip
+
+	MEP & EPA
+
 ***
 
 ## Installation
+
 ***
+
 > go get github.com/elvuel/go-aqi
 
 ## Usage
+
 ***
+
 > checkout ./example/main.go
 
 ## BM
+
 ***
->	BMMepGetAQI	500000	6929 ns/op
->	BMMepGetMepPM25IAQI	20000000	140 ns/op
+
+>	EpaGetAQI			200000		9271 ns/op
+
+>	EpaGetEpaPM25IAQI	1000000		1261 ns/op
+
+>	MepGetAQI			500000		6800 ns/op
+
+>	MepGetMepPM25IAQI	10000000	162 ns/op
 
 ## TODO
+
 ***
-* EPA implementation
+
 * MEP Refactor
 * Helper Utils
 * Self host webservice
+* Add reference resources
 
 ## License
+
 ***
+
 Under the MIT license

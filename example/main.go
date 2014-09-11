@@ -16,7 +16,9 @@ func main() {
 		O3Pollutant8H:    104,
 		SO2Pollutant24H:  9,
 	}
-
 	fmt.Println(mep.GetAQI())
+
+	v, _ := aqi.GetEpaIAQI("pm25_24h", 54.9)
+	fmt.Println(v)
 
 }
