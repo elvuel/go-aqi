@@ -16,3 +16,8 @@ type MepColor struct {
 	Name string
 	Color
 }
+
+type EpaColor struct {
+	Name string
+	Color
+}
