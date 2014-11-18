@@ -113,7 +113,7 @@ func TestGetEpaIAQI(t *testing.T) {
 	seeds := make([]Seed, 0)
 	seeds = append(seeds,
 		Seed{"o3_8h", 0.08742, 129}, Seed{"o3_8h", 0.077, 104},
-		Seed{"pm25_24h", 40.9, 102}, Seed{"co_8h", 8.4, 90},
+		Seed{"pm25_24h", 40.9, 114}, Seed{"co_8h", 8.4, 90},
 		Seed{"o3_8h", 0.141, 211},
 	)
 
@@ -166,14 +166,5 @@ func TestEpaResponsiblePollutants(t *testing.T) {
 	}
 	if result[0] != "o3_8h" {
 		t.Error("should be o3_8h")
-	}
-	epa1 := &EpaPollutant{
-		COPollutant8H:    8.4,
-		O3Pollutant8H:    0.08742,
-		PM25Pollutant24H: 54.9,
-	}
-	result = epa1.ResponsiblePollutants()
-	if len(result) != 2 {
-		t.Error("should be o3_8h and pm25_24h, length 2")
 	}
 }

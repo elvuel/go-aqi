@@ -11,6 +11,9 @@
 
 >	* [**EPA-454/B-12-001** _Sep 2012_](http://www.epa.gov/airnow/aqi-technical-assistance-document-sep2012.pdf)
 
+>	* EPA JAN/15/2013 rules
+>	>	See: epa_jan15_2013.pdf
+
 ***
 
 ## Installation

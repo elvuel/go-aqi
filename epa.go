@@ -121,10 +121,17 @@ func init() {
 
 	epaConcentrations["pm25_24h"] = []EPABreakPoint{
 		//0, 15.4, 40.4, 65.4, 150.4, 250.4, 350.4, 500.4
-		EPABreakPoint{0.0, 15.4},
-		EPABreakPoint{15.5, 40.4},
-		EPABreakPoint{40.5, 65.4},
-		EPABreakPoint{65.5, 150.4},
+		// EPA 2012
+		//EPABreakPoint{0.0, 15.4},
+		//EPABreakPoint{15.5, 40.4},
+		//EPABreakPoint{40.5, 65.4},
+		//EPABreakPoint{65.5, 150.4},
+		// EPA January 15, 2013
+		EPABreakPoint{0.0, 12.0},
+		EPABreakPoint{12.1, 35.4},
+		EPABreakPoint{35.5, 55.4},
+		EPABreakPoint{55.5, 150.4},
+
 		EPABreakPoint{150.5, 250.4},
 		EPABreakPoint{250.5, 350.4},
 		EPABreakPoint{350.4, 500.4},
