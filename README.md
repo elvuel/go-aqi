@@ -42,13 +42,6 @@
 >| MepGetPM25IAQI   | 20000000                     | 136             |
 
 
-## TODO
-
-***
-
-* Helper Utils
-* Self host webservice
-
 ## License
 
 ***
